@@ -1,7 +1,7 @@
 import { useState , useEffect} from 'react'
 import './App.css'
 import { TodoProvider } from './contexts'
-import TodoForm from './components/TodoForm'
+import { TodoForm , TodoItem } from './components'
 
 function App() {
   const [todos, setTodos] = useState([])
@@ -25,10 +25,10 @@ function App() {
 
         // LOCAL STORAGE (stores as "STRING") - getItem , setItem
   useEffect(() => {
-    const todos = localStorage.getItem('todos');
+    const todos = JSON.parse(localStorage.getItem('todos'));
 
     if (todos && todos.length > 0) {
-      setTodos(JSON.parse(todos))           // string to JSON
+      setTodos(todos)           // string to JSON
     }
   
   }, [])
@@ -40,13 +40,21 @@ function App() {
   return (
     <TodoProvider value={{todos , addTodo, updateTodo, deleteTodo, toggleTodo}}>
       <div className="bg-[#172842] min-h-screen py-8">
-          <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
-              <h1 className="text-2xl font-bold text-center mb-8 mt-2">Manage Your Todos</h1>
+          <div className="w-full max-w-2xl mx-auto shadow-2xl rounded-lg px-4 py-3 text-white">
+              <h1 className="text-2xl font-bold text-center mb-8 mt-2">Manage Todos</h1>
               <div className="mb-4">
                   <TodoForm/>
               </div>
               <div className="flex flex-wrap gap-y-3">
-                  {/*Loop and Add TodoItem here */}
+                  {
+                    todos.map( (eachitem)=> (
+                      <div className="w-full"
+                           key = {eachitem.id}
+                      >
+                        <TodoItem todo={eachitem} />
+                      </div>
+                    ))
+                  }
               </div>
           </div>
       </div>
